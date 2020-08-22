@@ -80,81 +80,10 @@ active
 							</div>
 						@else
 							<div class="card-content">
-								<div class="add-input">
-									@foreach($soals as $key => $value)
-										<div class="row">
-											<label class="col-sm-2 label-on-left">No {{$loop->iteration}}</label>
-											<div class="col-sm-10">
-												<div class="form-group label-floating is-empty">
-													<label class="control-label"></label>
-													<textarea wire:model="soal.{{$key}}" type="text" class="form-control">{{$value->soal}}</textarea>
-													@error('soal.{{$key}}') <span class="text-danger error">{{ $message }}</span>@enderror
-												</div>
-											</div>
-											
-											<label class="col-sm-2 label-on-left"></label>
-											<div class="col-sm-10">
-												<div class="form-group label-floating is-empty">
-													<label class="control-label">Pilihan A</label>
-													<input type="text" wire:model="pilihan_a.{{$key}}" name="" class="form-control" value="{{$value->pilihan->pilihan_a}}">
-												</div>
-											</div>
-
-											<label class="col-sm-2 label-on-left"></label>
-											<div class="col-sm-10">
-												<div class="form-group label-floating is-empty">
-													<label class="control-label">Pilihan B</label>
-													<input type="text" wire:model="pilihan_b.{{$key}}" name="" class="form-control" value="{{$value->pilihan->pilihan_b}}">
-												</div>
-											</div>
-
-											<label class="col-sm-2 label-on-left"></label>
-											<div class="col-sm-10">
-												<div class="form-group label-floating is-empty">
-													<label class="control-label">Pilihan C</label>
-													<input type="text" wire:model="pilihan_c.{{$key}}" name="" class="form-control" value="{{$value->pilihan->pilihan_c}}">
-												</div>
-											</div>
-
-											<label class="col-sm-2 label-on-left"></label>
-											<div class="col-sm-10">
-												<div class="form-group label-floating is-empty">
-													<label class="control-label">Pilihan D</label>
-													<input type="text" wire:model="pilihan_d.{{$key}}" name="" class="form-control" value="{{$value->pilihan->pilihan_d}}">
-												</div>
-											</div>
-
-											<label class="col-sm-2 label-on-left">Kunci Jawaban No {{$loop->iteration}}</label>
-											<div class="col-sm-10">
-												<div class="form-group label-floating is-empty">
-													<label class="control-label"></label>
-													<select class="form-control" wire:model="jawaban.{{$key}}">
-														<option value="A" {{strtolower($value->kunci_jawaban) == 'a' ? "selected" : ""}}>A</option>
-														<option value="B" {{strtolower($value->kunci_jawaban) == 'b' ? "selected" : ""}}>B</option>
-														<option value="C" {{strtolower($value->kunci_jawaban) == 'c' ? "selected" : ""}}>C</option>
-														<option value="D" {{strtolower($value->kunci_jawaban) == 'd' ? "selected" : ""}}>D</option>
-													</select>
-													@error('jawaban.{{$key}}') <span class="text-danger error">{{ $message }}</span>@enderror
-												</div>
-											</div>
-											@if ($loop->iteration == 1)
-												<div class="col-md-2">
-													<button class="btn text-white btn-info btn-sm" wire:click.prevent="add({{$i}})">Add</button>
-												</div>	
-											@else
-												<div class="col-md-2">
-													<button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$key}})">remove</button>
-												</div>
-											@endif
-											
-										</div>
-									@endforeach
-								</div>
-
 								@foreach($inputs as $key => $value)
 									<div class="add-input">
 										<div class="row">
-										<label class="col-sm-2 label-on-left">No {{$value}}</label>
+										<label class="col-sm-2 label-on-left">No {{$loop->iteration}}</label>
 										<div class="col-sm-10">
 											<div class="form-group label-floating is-empty">
 												<label class="control-label"></label>
@@ -195,7 +124,7 @@ active
 											</div>
 										</div>
 
-										<label class="col-sm-2 label-on-left">Kunci Jawaban No {{$value}}</label>
+										<label class="col-sm-2 label-on-left">Kunci Jawaban No {{$loop->iteration}}</label>
 										<div class="col-sm-10">
 											<div class="form-group label-floating is-empty">
 												<label class="control-label"></label>
@@ -204,14 +133,20 @@ active
 													<option value="B">B</option>
 													<option value="C">C</option>
 													<option value="D">D</option>
-													<option value="E">E</option>
 												</select>
 												@error('jawaban.{{$value}}') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>
-										<div class="col-md-2">
-											<button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$key}})">remove</button>
-										</div>
+
+										@if ($key == 0)
+											<div class="col-md-2">
+												<button class="btn text-white btn-info btn-sm" wire:click.prevent="add({{$i}})">Add</button>
+											</div>
+										@else
+											<div class="col-md-2">
+												<button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$key}})">remove</button>
+											</div>
+										@endif
 									</div>
 									</div>
 						        @endforeach

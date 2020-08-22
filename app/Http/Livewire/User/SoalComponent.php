@@ -13,7 +13,7 @@ use App\Http\Livewire\User\EditSoal;
 class SoalComponent extends Component
 {
     public $soal, $jawaban,$pilihan_a,$pilihan_b,$pilihan_c,$pilihan_d;
-    public $updateMode 	= false;
+    public $updateMode,$isedit 	= false;
     public $inputs 		= [];
     public $i 			= 1;
     public $lastI 		= 1;
@@ -28,6 +28,7 @@ class SoalComponent extends Component
         $detailSoal = DetailSoal::with(['paket_soal','pilihan'])->where('soal_id',$soal->id);
         if ($detailSoal->count() >= 1) 
         {
+            $this->isedit = true;
             $this->i = $detailSoal->count();
         }
     }
@@ -38,6 +39,8 @@ class SoalComponent extends Component
         $soalDb     = Soal::where('kode',$kode)->first();
         $detailSoal = DetailSoal::where('soal_id',$soalDb->id)->first();
 
+        $this->soal = array_values($this->soal);
+
         if ($detailSoal->count() >= 1) 
         {
             Pilihan::where('detail_soal_id',$detailSoal->id)->delete();
@@ -46,11 +49,11 @@ class SoalComponent extends Component
 
         $no = 0;
         $soalIds = [];
-        foreach ($this->soal as $key => $soal) 
+        foreach ($this->inputs as $key => $value) 
         {
             $detailSoal = DetailSoal::insertGetId([
                 'soal_id'=>$soalDb->id,
-                'soal' => $soal, 
+                'soal' => $this->soal[$no], 
                 'kunci_jawaban' => $this->jawaban[$no],
                 'created_at' => date('Y-m-d H:i:s')
             ]);
@@ -169,12 +172,20 @@ class SoalComponent extends Component
 
         $i = 1;
         $last = 1;
-        foreach ($this->inputs as $key => $value) 
-        {
-        	$last = $this->inputs[$key] = $last+1;
-        	$last = $i+1;
-        }
 
+        if ($this->isedit) 
+        {
+
+        }
+        else
+        {
+            foreach ($this->inputs as $key => $value) 
+            {
+                $last = $this->inputs[$key] = $last+1;
+                $last = $i+1;
+            }    
+        }
+        
         $this->i = $last;
     }
 
@@ -203,6 +214,7 @@ class SoalComponent extends Component
             {
                 if (!\Session::has('message')) 
                 {
+                    $i = 1;
                     foreach ($data['soals'] as $key => $value) 
                     {
                         $this->soal[] = $value->soal;
@@ -211,9 +223,14 @@ class SoalComponent extends Component
                         $this->pilihan_c[] = $value->pilihan->pilihan_c;
                         $this->pilihan_d[] = $value->pilihan->pilihan_d;
                         $this->jawaban[] = $value->kunci_jawaban;
+
+                        $this->inputs[] = $key;
+
+                        $i++;
                     }
                 }
             }
+            $this->i = count($this->inputs);
 
             return view('livewire.user.edit-soal',$data);
         }
