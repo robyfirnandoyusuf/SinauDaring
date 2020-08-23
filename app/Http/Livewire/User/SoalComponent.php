@@ -21,15 +21,20 @@ class SoalComponent extends Component
 
     public function mount()
     {
-        $this->jawaban[] = 'A';
-
         $kode = request()->kode;
         $soal = Soal::where('kode',$kode)->first();
         $detailSoal = DetailSoal::with(['paket_soal','pilihan'])->where('soal_id',$soal->id);
+
         if ($detailSoal->count() >= 1) 
         {
             $this->isedit = true;
             $this->i = $detailSoal->count();
+        }
+        else
+        {
+            if ($soal->jenis_soal == 'pilihan'){
+                if (empty($this->jawaban[0])) $this->jawaban[0] = 'A';
+            }
         }
     }
 
@@ -39,7 +44,8 @@ class SoalComponent extends Component
         $soalDb     = Soal::where('kode',$kode)->first();
         $detailSoal = DetailSoal::where('soal_id',$soalDb->id)->first();
 
-        $this->soal = array_values($this->soal);
+        $this->soal     = array_values($this->soal);
+        $this->jawaban  = array_values($this->jawaban);
 
         if ($detailSoal->count() >= 1) 
         {
@@ -47,37 +53,56 @@ class SoalComponent extends Component
         }
         DetailSoal::where('soal_id',$soalDb->id)->delete();
 
-        $no = 0;
-        $soalIds = [];
-        foreach ($this->inputs as $key => $value) 
+        if ($soalDb->jenis_soal == 'pilihan') 
         {
-            $detailSoal = DetailSoal::insertGetId([
-                'soal_id'=>$soalDb->id,
-                'soal' => $this->soal[$no], 
-                'kunci_jawaban' => $this->jawaban[$no],
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
+            $no = 0;
+            $soalIds = [];
+            foreach ($this->inputs as $key => $value) 
+            {
+                $detailSoal = DetailSoal::insertGetId([
+                    'soal_id'=>$soalDb->id,
+                    'soal' => $this->soal[$no], 
+                    'kunci_jawaban' => $this->jawaban[$no],
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
 
-            $soalIds[] = $detailSoal;
+                $soalIds[] = $detailSoal;
 
-            $no++;
+                $no++;
+            }
+
+            $this->pilihan_a = array_values($this->pilihan_a);
+            $this->pilihan_b = array_values($this->pilihan_b);
+            $this->pilihan_c = array_values($this->pilihan_c);
+            $this->pilihan_d = array_values($this->pilihan_d);
+
+            foreach ($soalIds as $i => $soal_id) 
+            {
+                Pilihan::insert([
+                    'detail_soal_id' => $soal_id,
+                    'pilihan_a' => $this->pilihan_a[$i],
+                    'pilihan_b' => $this->pilihan_b[$i],
+                    'pilihan_c' => $this->pilihan_c[$i],
+                    'pilihan_d' => $this->pilihan_d[$i],
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
         }
-
-        $this->pilihan_a=array_values($this->pilihan_a);
-        $this->pilihan_b=array_values($this->pilihan_b);
-        $this->pilihan_c=array_values($this->pilihan_c);
-        $this->pilihan_d=array_values($this->pilihan_d);
-
-        foreach ($soalIds as $i => $soal_id) 
+        else
         {
-            Pilihan::insert([
-                'detail_soal_id' => $soal_id,
-                'pilihan_a' => $this->pilihan_a[$i],
-                'pilihan_b' => $this->pilihan_b[$i],
-                'pilihan_c' => $this->pilihan_c[$i],
-                'pilihan_d' => $this->pilihan_d[$i],
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
+            $dataSoal = [];
+            $no = 0;
+            foreach ($this->inputs as $key => $value) 
+            {
+                $dataSoal[] = [
+                    'soal_id'=>$soalDb->id,
+                    'soal' => $this->soal[$no], 
+                    'kunci_jawaban' => $this->jawaban[$no],
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                $no++;
+            }
+            DetailSoal::insert($dataSoal);
         }
         
         $this->inputs = [];
@@ -91,26 +116,50 @@ class SoalComponent extends Component
     {
         $kode   = request()->kode;
     	$soalDb = Soal::where('kode',$kode)->firstOrFail();
-    	
     	if (!$soalDb) abort(404);
 
         if ($soalDb->jenis_soal == 'pilihan') 
         {
+            $this->soal = array_values($this->soal);
+            $this->pilihan_a = array_values($this->pilihan_a);
+            $this->pilihan_b = array_values($this->pilihan_b);
+            $this->pilihan_c = array_values($this->pilihan_c);
+            $this->pilihan_d = array_values($this->pilihan_d);
+            $this->jawaban = array_values($this->jawaban);
+
             $validatedDate = $this->validate([
                     'soal.0' => 'required',
                     'jawaban.0' => 'required',
+                    'pilihan_a.0' => 'required',
+                    'pilihan_b.0' => 'required',
+                    'pilihan_c.0' => 'required',
+                    'pilihan_d.0' => 'required',
                     'soal.*' => 'required',
                     'jawaban.*' => 'required',
+                    'pilihan_a.*' => 'required',
+                    'pilihan_b.*' => 'required',
+                    'pilihan_c.*' => 'required',
+                    'pilihan_d.*' => 'required',
                 ],
                 [
                     'soal.0.required' => 'soal field is required',
                     'jawaban.0.required' => 'jawaban field is required',
+                    'pilihan_a.0.required' => 'pilihan A field is required',
+                    'pilihan_b.0.required' => 'pilihan B field is required',
+                    'pilihan_c.0.required' => 'pilihan C field is required',
+                    'pilihan_d.0.required' => 'pilihan D field is required',
                     'soal.*.required' => 'soal field is required',
                     'jawaban.*.required' => 'jawaban field is required',
+                    'pilihan_a.*' => 'pilihan A field is required',
+                    'pilihan_b.*' => 'pilihan B field is required',
+                    'pilihan_c.*' => 'pilihan C field is required',
+                    'pilihan_d.*' => 'pilihan D field is required',
                 ]
             );
 
-            $this->jawaban = array_values($this->jawaban);
+            $this->soal     = array_values($this->soal);
+            $this->jawaban  = array_values($this->jawaban);
+
             $no = 0;
             $soalIds = [];
 
@@ -143,6 +192,38 @@ class SoalComponent extends Component
                 ]);
             }
         }
+        else
+        {
+            $validatedDate = $this->validate([
+                    'soal.0' => 'required',
+                    'jawaban.0' => 'required',
+                    'soal.*' => 'required',
+                    'jawaban.*' => 'required',
+                ],
+                [
+                    'soal.0.required' => 'soal field is required',
+                    'jawaban.0.required' => 'jawaban field is required',
+                    'soal.*.required' => 'soal field is required',
+                    'jawaban.*.required' => 'jawaban field is required',
+                ]
+            );
+
+            $dataSoal = [];
+            $this->soal     = array_values($this->soal);
+            $this->jawaban  = array_values($this->jawaban);
+
+            foreach ($this->soal as $key => $soal) 
+            {
+                $dataSoal[] = [
+                    'soal_id'=>$soalDb->id,
+                    'soal' => $soal, 
+                    'kunci_jawaban' => $this->jawaban[$key],
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+            }
+
+            $detailSoal = DetailSoal::insert($dataSoal);
+        }
 	    
         $this->inputs = [];
         $this->resetInputFields();
@@ -154,30 +235,49 @@ class SoalComponent extends Component
 
     public function add($i)
     {
+        $kode = request()->kode;
+        $soalDb = Soal::where('kode',$kode)->firstOrFail();
+
         $i              = $i + 1;
         $this->i        = $i;
         $this->inputs[] = $i;
-        $this->jawaban[] = 'A';
+        $this->soal[$i]    = "";
+        $this->jawaban[$i] = "";
 
-        /*$this->soal = [];
-        $this->pilihan_a = [];
-        $this->pilihan_b = [];
-        $this->pilihan_c = [];
-        $this->pilihan_d = [];*/
+        if ($soalDb->jenis_soal == 'pilihan') 
+            $this->jawaban[$i] = 'A';
+        // dd($this->soal);
     }
 
     public function remove($i)
     {
+        $kode = request()->kode;
+        $soalDb = Soal::where('kode',$kode)->firstOrFail();
+
+        $this->inputs = array_values($this->inputs);
+        $this->soal = array_values($this->soal);
+        $this->jawaban = array_values($this->jawaban);
+
+        if ($soalDb->jenis_soal == 'pilihan') 
+        {
+            $this->pilihan_a = array_values($this->pilihan_a);
+            $this->pilihan_b = array_values($this->pilihan_b);
+            $this->pilihan_c = array_values($this->pilihan_c);
+            $this->pilihan_d = array_values($this->pilihan_d);
+
+            unset($this->pilihan_a[$i+1]);
+            unset($this->pilihan_b[$i+1]);
+            unset($this->pilihan_c[$i+1]);
+            unset($this->pilihan_d[$i+1]);
+            unset($this->soal[$i+1]);
+        }
         unset($this->inputs[$i]);
+        unset($this->jawaban[$i]);
 
         $i = 1;
         $last = 1;
 
-        if ($this->isedit) 
-        {
-
-        }
-        else
+        if (!$this->isedit) 
         {
             foreach ($this->inputs as $key => $value) 
             {
@@ -205,6 +305,7 @@ class SoalComponent extends Component
 
         //check edit or create
         $detailSoal = DetailSoal::with(['paket_soal','pilihan'])->where('soal_id',$soal->id);
+        $arrJawaban = [];
 
         if ($detailSoal->count() >= 1) 
         {
@@ -218,17 +319,25 @@ class SoalComponent extends Component
                     foreach ($data['soals'] as $key => $value) 
                     {
                         $this->soal[] = $value->soal;
-                        $this->pilihan_a[] = $value->pilihan->pilihan_a;
-                        $this->pilihan_b[] = $value->pilihan->pilihan_b;
-                        $this->pilihan_c[] = $value->pilihan->pilihan_c;
-                        $this->pilihan_d[] = $value->pilihan->pilihan_d;
+                        if ($soal->jenis_soal == 'pilihan') 
+                        {
+                            $this->pilihan_a[] = $value->pilihan->pilihan_a;
+                            $this->pilihan_b[] = $value->pilihan->pilihan_b;
+                            $this->pilihan_c[] = $value->pilihan->pilihan_c;
+                            $this->pilihan_d[] = $value->pilihan->pilihan_d;
+                        }
+                        
                         $this->jawaban[] = $value->kunci_jawaban;
-
                         $this->inputs[] = $key;
 
                         $i++;
                     }
                 }
+            }
+
+            if ($soal->jenis_soal == 'pilihan') 
+            {
+                // $this->jawaban = array_values($this->jawaban);
             }
             $this->i = count($this->inputs);
 

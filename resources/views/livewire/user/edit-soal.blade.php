@@ -13,35 +13,10 @@ active
 						</div>
 						@if ($type == 'uraian')
 							<div class="card-content">
-								<div class="add-input">
-									<div class="row">
-										<label class="col-sm-2 label-on-left">No 1</label>
-										<div class="col-sm-10">
-											<div class="form-group label-floating is-empty">
-												<label class="control-label"></label>
-												<textarea wire:model="soal.0" type="text" class="form-control"></textarea>
-												@error('soal.0') <span class="text-danger error">{{ $message }}</span>@enderror
-											</div>
-										</div>
-
-										<label class="col-sm-2 label-on-left">Kunci Jawaban No 1</label>
-										<div class="col-sm-10">
-											<div class="form-group label-floating is-empty">
-												<label class="control-label"></label>
-												<input wire:model="jawaban.0" type="text" class="form-control">
-												@error('jawaban.0') <span class="text-danger error">{{ $message }}</span>@enderror
-											</div>
-										</div>
-										<div class="col-md-2">
-											<button class="btn text-white btn-info btn-sm" wire:click.prevent="add({{$i}})">Add</button>
-										</div>
-									</div>
-								</div>
-
 								@foreach($inputs as $key => $value)
 									<div class="add-input">
 										<div class="row">
-											<label class="col-sm-2 label-on-left">No {{$value}}</label>
+											<label class="col-sm-2 label-on-left">No {{$loop->iteration}}</label>
 											<div class="col-sm-10">
 												<div class="form-group label-floating is-empty">
 													<label class="control-label"></label>
@@ -49,16 +24,22 @@ active
 												</div>
 											</div>
 
-											<label class="col-sm-2 label-on-left">Kunci Jawaban No {{$value}}</label>
+											<label class="col-sm-2 label-on-left">Kunci Jawaban No {{$loop->iteration}}</label>
 											<div class="col-sm-10">
 												<div class="form-group label-floating is-empty">
 													<label class="control-label"></label>
-													<input wire:model="jawaban.{{ $value }}" type="text" class="form-control">
+													<textarea rows="3" wire:model="jawaban.{{ $value }}" type="text" class="form-control"></textarea>
 												</div>
 											</div>
+											@if ($key == 0)
+											<div class="col-md-2">
+												<button class="btn text-white btn-info btn-sm" wire:click.prevent="add({{$i}})">Add</button>
+											</div>
+											@else
 											<div class="col-md-2">
 												<button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$key}})">remove</button>
 											</div>
+											@endif
 										</div>
 									</div>
 						        @endforeach
@@ -67,7 +48,7 @@ active
 									<div class="col-md-12">
 										<div class="col-md-2">
 											<div class="form-group form-button">
-												<button type="submit" class="btn btn-fill btn-rose" wire:click.prevent="store()">Simpan</button>
+												<button type="submit" class="btn btn-fill btn-rose" wire:click.prevent="update()">Simpan</button>
 											</div>
 										</div>
 										<div class="col-md-2">
@@ -128,12 +109,14 @@ active
 										<div class="col-sm-10">
 											<div class="form-group label-floating is-empty">
 												<label class="control-label"></label>
-												<select class="form-control" wire:model="jawaban.{{$value}}">
-													<option value="A">A</option>
-													<option value="B">B</option>
-													<option value="C">C</option>
-													<option value="D">D</option>
-												</select>
+												{{-- <div wire:ignore> --}}
+													<select class="form-control" wire:model="jawaban.{{$value}}">
+														<option value="A">A</option>
+														<option value="B">B</option>
+														<option value="C">C</option>
+														<option value="D">D</option>
+													</select>
+												{{-- </div> --}}
 												@error('jawaban.{{$value}}') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>

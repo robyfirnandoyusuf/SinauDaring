@@ -28,7 +28,7 @@ active
 										<div class="col-sm-10">
 											<div class="form-group label-floating is-empty">
 												<label class="control-label"></label>
-												<input wire:model="jawaban.0" type="text" class="form-control">
+												<textarea rows="3" wire:model="jawaban.0" type="text" class="form-control"></textarea>
 												@error('jawaban.0') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>
@@ -46,6 +46,7 @@ active
 												<div class="form-group label-floating is-empty">
 													<label class="control-label"></label>
 													<textarea wire:model="soal.{{ $value }}" type="text" class="form-control"></textarea>
+													@error('soal.{{$value}}') <span class="text-danger error">{{ $message }}</span>@enderror
 												</div>
 											</div>
 
@@ -53,11 +54,12 @@ active
 											<div class="col-sm-10">
 												<div class="form-group label-floating is-empty">
 													<label class="control-label"></label>
-													<input wire:model="jawaban.{{ $value }}" type="text" class="form-control">
+													<textarea rows="3" wire:model="jawaban.{{ $value }}" type="text" class="form-control"></textarea>
+													@error('soal.{{$jawaban}}') <span class="text-danger error">{{ $message }}</span>@enderror
 												</div>
 											</div>
 											<div class="col-md-2">
-												<button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$key}})">remove</button>
+												<button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$loop->iteration}})">remove</button>
 											</div>
 										</div>
 									</div>
@@ -96,6 +98,7 @@ active
 											<div class="form-group label-floating is-empty">
 												<label class="control-label">Pilihan A</label>
 												<input type="text" wire:model="pilihan_a.0" name="" class="form-control">
+												@error('pilihan_a.0') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>
 
@@ -104,6 +107,7 @@ active
 											<div class="form-group label-floating is-empty">
 												<label class="control-label">Pilihan B</label>
 												<input type="text" wire:model="pilihan_b.0" name="" class="form-control">
+												@error('pilihan_b.0') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>
 
@@ -112,6 +116,7 @@ active
 											<div class="form-group label-floating is-empty">
 												<label class="control-label">Pilihan C</label>
 												<input type="text" wire:model="pilihan_c.0" name="" class="form-control">
+												@error('pilihan_c.0') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>
 
@@ -120,6 +125,7 @@ active
 											<div class="form-group label-floating is-empty">
 												<label class="control-label">Pilihan D</label>
 												<input type="text" wire:model="pilihan_d.0" name="" class="form-control">
+												@error('pilihan_d.0') <span class="text-danger error">{{ $message }}</span>@enderror
 											</div>
 										</div>
 
