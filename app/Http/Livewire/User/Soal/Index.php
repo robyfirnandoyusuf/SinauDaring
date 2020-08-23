@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\User;
+namespace App\Http\Livewire\User\Soal;
 
 use App\Models\Soal;
 use Livewire\Component;
@@ -10,6 +10,6 @@ class Index extends Component
 {
     public function render()
     {
-        return view('livewire.user.index');
+        return view('livewire.user.soal.index');
     }
 }

@@ -18,7 +18,7 @@
                         {!!displayAlert()!!}
                         <a href="{{ route('user.soal.create') }}" class="btn btn-primary">Buat Paket Soal</a>
                         <div class="table-responsive">
-                            @livewire('user.table')
+                            @livewire('user.soal.table')
                         </div>
                     </div>
                 </div>

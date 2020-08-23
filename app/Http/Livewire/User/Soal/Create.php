@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\User;
+namespace App\Http\Livewire\User\Soal;
 
 use Livewire\Component;
 use App\Models\Matpel;
@@ -38,6 +38,6 @@ class Create extends Component
     public function render()
     {
     	$data['matpels'] = Matpel::all();
-        return view('livewire.user.create',$data);
+        return view('livewire.user.soal.create',$data);
     }
 }

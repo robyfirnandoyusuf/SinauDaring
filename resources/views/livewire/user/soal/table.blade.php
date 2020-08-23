@@ -49,7 +49,7 @@
                             <a href="{{route('user.edit',$soal->kode)}}" rel="tooltip" class="btn btn-success" data-original-title="" title="">
                                 <i class="material-icons">edit</i>
                             </a>
-                            <button type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="">
+                            <button onclick="return confirm('Are you sure you want to delete this item?');" wire:click=delete("{{ $soal->kode }}") type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="">
                                 <i class="material-icons">close</i>
                             </button>
                         </td>

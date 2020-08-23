@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\User;
+namespace App\Http\Livewire\User\Soal;
 
 use Livewire\Component;
 use App\Models\Matpel;
@@ -50,6 +50,6 @@ class Edit extends Component
     	$data['matpels'] = Matpel::all();
     	$data['single_soal'] = $soal;
 
-        return view('livewire.user.edit',$data);
+        return view('livewire.user.soal.edit',$data);
     }
 }

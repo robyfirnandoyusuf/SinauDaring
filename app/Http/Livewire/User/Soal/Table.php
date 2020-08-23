@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\User;
+namespace App\Http\Livewire\User\Soal;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -38,6 +38,21 @@ class Table extends Component
         $soal = $soal->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')->paginate($this->perPage);
         $data['soals'] = $soal;
 
-        return view('livewire.user.table', $data);
+        return view('livewire.user.soal.table', $data);
+    }
+
+    public function delete($kode='')
+    {
+        $soal = Soal::where('kode',$kode);
+
+        if($soal->first()) 
+        {
+            $soal->delete();
+        }
+
+        //flash message
+        session()->flash('message', 'success|Data Berhasil Dihapus.');
+        //redirect
+        return redirect()->route('user.soal.index');
     }
 }

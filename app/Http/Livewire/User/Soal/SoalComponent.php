@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\User;
+namespace App\Http\Livewire\User\Soal;
 
 use Livewire\Component;
 use \App\Models\Soal;
@@ -345,11 +345,11 @@ class SoalComponent extends Component
             }
             $this->i = count($this->inputs);
 
-            return view('livewire.user.edit-soal',$data);
+            return view('livewire.user.soal.edit-soal',$data);
         }
         else
         {
-            return view('livewire.user.create-soal',$data);
+            return view('livewire.user.soal.create-soal',$data);
         }
     }
 }
