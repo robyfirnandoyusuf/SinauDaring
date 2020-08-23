@@ -271,6 +271,10 @@ class SoalComponent extends Component
             unset($this->pilihan_d[$i+1]);
             unset($this->soal[$i+1]);
         }
+        else
+        {
+            unset($this->soal[$i]);
+        }
         unset($this->inputs[$i]);
         unset($this->jawaban[$i]);
 
