@@ -47,6 +47,13 @@
                     <p>Soal</p>
                 </a>
             </li>
+
+            <li class="@yield('scoreAnalysisActive')">
+                <a href="{{ route('user.analysis.score') }}">
+                    <i class="material-icons">score</i>
+                    <p>Analisis Nilai</p>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

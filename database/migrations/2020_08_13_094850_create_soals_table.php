@@ -16,6 +16,7 @@ class CreateSoalsTable extends Migration
         Schema::create('soals', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('kode');
+            $table->string('token');
             $table->bigInteger('matpel_id')->unsigned();
             $table->enum('jenis_soal',['pilihan','uraian','mix']);
             $table->bigInteger('created_by')->nullable();

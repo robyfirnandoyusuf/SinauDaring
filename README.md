@@ -8,7 +8,9 @@ Todo List :
 - [x] Feature CRUD Paket Soal
 - [x] Feature CRUD Detail Soal
 - [x] Move component soal files to subdir soal
+- [x] Migration Pointer table
+- [x] Migration Participants table
+- [x] Regist Telegram Bot
 - [ ] Feature "Analisis Nilai" soal pilihan ganda
 - [ ] Feature "Analisis Nilai" soal uraian
-- [ ] Regist Telegram Bot
 - [ ] Engine Telegram Bot

@@ -23,6 +23,7 @@ class Create extends Component
 
         $post = Soal::create([
             'kode' => $this->kode,
+            'token' => $this->genCode(),
             'jenis_soal' => $this->jenis_soal,
             'matpel_id' => $this->matpel_id,
         ]);
@@ -33,6 +34,16 @@ class Create extends Component
         //redirect
         return redirect()->route('user.soal.index');
 
+    }
+
+    public function genCode($length=7)
+    {
+        mt_srand((double)microtime()*10000);
+        $charid = md5(uniqid(rand(), true));
+        $c = unpack("C*",$charid);
+        $c = implode("",$c);
+
+        return substr($c,0,$length);
     }
 
     public function render()
