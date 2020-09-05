@@ -1,4 +1,4 @@
-# Belajar Daring
+# Sinau Daring
 ### On Progress
 
 Built with :heart: Laravel + Livewire + TurboLinks + Telegram Bot
